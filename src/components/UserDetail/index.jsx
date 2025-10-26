@@ -1,23 +1,53 @@
 import React from "react";
-import {Typography} from "@mui/material";
+import { Typography, Card, CardContent, Button } from "@mui/material";
+import { Link, useParams } from "react-router-dom";
 
 import "./styles.css";
-import {useParams} from "react-router-dom";
+import models from "../../modelData/models";
 
 /**
  * Define UserDetail, a React component of Project 4.
  */
 function UserDetail() {
-    const user = useParams();
+    const { userId } = useParams();
+    const user = models.userModel(userId);
+
+    if (!user) {
+        return (
+            <Typography variant="h5" style={{ padding: "20px" }}>
+                User not found
+            </Typography>
+        );
+    }
+
     return (
-        <>
-          <Typography variant="body1">
-            This should be the UserDetail view of the PhotoShare app. Since it is
-            invoked from React Router the params from the route will be in property match.
-            So this should show details of user: {user.userId}.
-            You can fetch the model for the user from models.userModel.
-          </Typography>
-        </>
+        <div className="user-detail-container" style={{ padding: "20px" }}>
+            <Card>
+                <CardContent>
+                    <Typography variant="h4" gutterBottom>
+                        {user.first_name} {user.last_name}
+                    </Typography>
+                    <Typography variant="body1" color="textSecondary" gutterBottom>
+                        <strong>Location:</strong> {user.location}
+                    </Typography>
+                    <Typography variant="body1" color="textSecondary" gutterBottom>
+                        <strong>Occupation:</strong> {user.occupation}
+                    </Typography>
+                    <Typography variant="body1" color="textSecondary" paragraph>
+                        <strong>Description:</strong> {user.description}
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        component={Link}
+                        to={`/photos/${user._id}`}
+                        style={{ marginTop: "10px" }}
+                    >
+                        View Photos
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
     );
 }
 
